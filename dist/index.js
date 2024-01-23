@@ -1,7 +1,102 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 241:
+/***/ 360:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const exec_1 = __importDefault(__nccwpck_require__(514));
+function main(pathsToSearch = '') {
+    return __awaiter(this, void 0, void 0, function* () {
+        throwsForInvalidPaths(pathsToSearch);
+        return hasChanged(pathsToSearch);
+    });
+}
+function throwsForInvalidPaths(pathsToSearch) {
+    if (pathsToSearch && typeof pathsToSearch === 'string')
+        return;
+    throw new Error('pathsToSearch needs to be a string');
+}
+function getCWD() {
+    const { GITHUB_WORKSPACE = '.', SOURCE = '.' } = process.env;
+    return `${GITHUB_WORKSPACE}/${SOURCE}`;
+}
+function hasChanged(pathsToSearch) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const paths = pathsToSearch.split(' ');
+        //  --quiet: exits with 1 if there were differences (https://git-scm.com/docs/git-diff)
+        const exitCode = yield exec_1.default.exec('git', ['diff', '--quiet', 'HEAD~1', 'HEAD', '--', ...paths], {
+            ignoreReturnCode: true,
+            silent: false,
+            cwd: getCWD(),
+        });
+        const pathsChanged = exitCode === 1;
+        return pathsChanged;
+    });
+}
+exports["default"] = main;
+
+
+/***/ }),
+
+/***/ 109:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const core_1 = __importDefault(__nccwpck_require__(186));
+const hasChanged_1 = __importDefault(__nccwpck_require__(360));
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const paths = core_1.default.getInput('paths', { required: true });
+            const changed = yield (0, hasChanged_1.default)(paths);
+            if (changed) {
+                core_1.default.info(`Code in the following paths changed: ${paths}`);
+            }
+            else {
+                core_1.default.info(`Code in the following paths hasn't changed: ${paths}`);
+            }
+            core_1.default.setOutput('changed', changed);
+        }
+        catch (error) {
+            core_1.default.setFailed(error);
+        }
+    });
+}
+run();
+
+
+/***/ }),
+
+/***/ 351:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
@@ -135,7 +230,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getIDToken = exports.getState = exports.saveState = exports.group = exports.endGroup = exports.startGroup = exports.info = exports.notice = exports.warning = exports.error = exports.debug = exports.isDebug = exports.setFailed = exports.setCommandEcho = exports.setOutput = exports.getBooleanInput = exports.getMultilineInput = exports.getInput = exports.addPath = exports.setSecret = exports.exportVariable = exports.ExitCode = void 0;
-const command_1 = __nccwpck_require__(241);
+const command_1 = __nccwpck_require__(351);
 const file_command_1 = __nccwpck_require__(717);
 const utils_1 = __nccwpck_require__(278);
 const os = __importStar(__nccwpck_require__(37));
@@ -3922,53 +4017,6 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 632:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const exec = __nccwpck_require__(514)
-
-async function main(pathsToSearch = '') {
-  throwsForInvalidPaths(pathsToSearch)
-
-  return hasChanged(pathsToSearch)
-}
-
-function throwsForInvalidPaths(pathsToSearch) {
-  if (pathsToSearch && typeof pathsToSearch === 'string') return
-  throw new Error('pathsToSearch needs to be a string')
-}
-
-function getCWD() {
-  const { GITHUB_WORKSPACE = '.', SOURCE = '.' } = process.env
-  return `${GITHUB_WORKSPACE}/${SOURCE}`
-}
-
-async function hasChanged(pathsToSearch) {
-  const paths = pathsToSearch.split(' ')
-
-  //  --quiet: exits with 1 if there were differences (https://git-scm.com/docs/git-diff)
-  const exitCode = await exec.exec('git', [
-    'diff',
-    '--quiet',
-    'HEAD~1',
-    'HEAD',
-    '--',
-    ...paths,
-  ], {
-    ignoreReturnCode: true,
-    silent: false,
-    cwd: getCWD()
-  })
-
-  const pathsChanged = exitCode === 1
-
-  return pathsChanged
-}
-
-module.exports = main
-
-/***/ }),
-
 /***/ 491:
 /***/ ((module) => {
 
@@ -4119,35 +4167,13 @@ module.exports = require("util");
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-(() => {
-
-const core = __nccwpck_require__(186);
-
-const hasChanged = __nccwpck_require__(632);
-
-async function run() {
-  try {
-    const paths = core.getInput('paths', { required: true });
-    const changed = await hasChanged(paths)
-
-    if (changed) {
-      core.info(`Code in the following paths changed: ${paths}`)
-    } else {
-      core.info(`Code in the following paths hasn't changed: ${paths}`)
-    }
-
-    core.setOutput('changed', changed)
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run();
-})();
-
-module.exports = __webpack_exports__;
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module is referenced by other modules so it can't be inlined
+/******/ 	var __webpack_exports__ = __nccwpck_require__(109);
+/******/ 	module.exports = __webpack_exports__;
+/******/ 	
 /******/ })()
 ;
 //# sourceMappingURL=index.js.map
