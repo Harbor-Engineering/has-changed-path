@@ -1,7 +1,7 @@
 {
   "name": "has-changed-path",
   "version": "0.0.0",
-  "main": "lib/main.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write '**/*.ts'",
